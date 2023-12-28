@@ -18,7 +18,7 @@ public class BookingService {
 
   public BookingDto createBooking(BookingDto bookingDto) {
     Booking savedBooking = bookingRepository.save(bookingMapper.toEntity(bookingDto));
-    log.info("Booking saved: {}", savedBooking);
+    log.info("Booking saved: {} ", savedBooking);
     return bookingMapper.toDto(savedBooking);
   }
 

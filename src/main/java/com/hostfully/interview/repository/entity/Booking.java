@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,7 +28,8 @@ public class Booking {
   @Enumerated(EnumType.STRING)
   private BookingStatus bookingStatus;
 
-  @NotNull private String guestId;
+  @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<GuestDetails> guestDetails = new ArrayList<>();
 
   @NotNull private String propertyId;
 }
