@@ -3,6 +3,7 @@ package com.hostfully.interview.controller;
 import com.hostfully.interview.domain.dto.BookingDto;
 import com.hostfully.interview.service.BookingService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,11 @@ import org.springframework.web.bind.annotation.*;
 public class BookingController {
 
   private final BookingService bookingService;
+
+  @GetMapping("/{bookingId}")
+  public ResponseEntity<BookingDto> getBooking(@PathVariable @NotNull String bookingId) {
+    return ResponseEntity.status(HttpStatus.OK).body(bookingService.getBooking(bookingId));
+  }
 
   @PostMapping
   public ResponseEntity<BookingDto> createBooking(@RequestBody @Valid BookingDto bookingDto) {

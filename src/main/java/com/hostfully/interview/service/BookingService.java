@@ -24,6 +24,13 @@ public class BookingService {
   private final PropertyRepository propertyRepository;
   private final BookingMapper bookingMapper;
 
+  public BookingDto getBooking(String id) {
+    return bookingRepository
+        .findById(id)
+        .map(bookingMapper::toDto)
+        .orElseThrow(() -> new InvalidDataException("Booking with ID not found: " + id));
+  }
+
   public BookingDto createBooking(BookingDto bookingDto) {
     Property property =
         propertyRepository
@@ -66,9 +73,6 @@ public class BookingService {
   }
 
   public void deleteBooking(String id) {
-    if (Objects.isNull(id)) {
-      throw new RuntimeException("Booking id cannot be null.");
-    }
     Booking existingBooking =
         bookingRepository
             .findById(id)
