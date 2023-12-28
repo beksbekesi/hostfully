@@ -3,12 +3,11 @@ package com.hostfully.interview.repository.entity;
 import com.hostfully.interview.domain.dto.BookingStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -31,5 +30,7 @@ public class Booking {
   @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<GuestDetails> guestDetails = new ArrayList<>();
 
-  @NotNull private String propertyId;
+  @ManyToOne
+  @JoinColumn(name = "property_id")
+  private Property property;
 }
