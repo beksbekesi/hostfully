@@ -8,10 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Validated
@@ -25,5 +22,16 @@ public class BookingController {
   @PostMapping
   public ResponseEntity<BookingDto> createBooking(@RequestBody @Valid BookingDto bookingDto) {
     return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.createBooking(bookingDto));
+  }
+
+  @PutMapping
+  public ResponseEntity<BookingDto> updateBooking(@RequestBody @Valid BookingDto bookingDto) {
+    return ResponseEntity.status(HttpStatus.OK).body(bookingService.updateBooking(bookingDto));
+  }
+
+  @DeleteMapping("/{bookingId}")
+  public ResponseEntity<Void> deleteBooking(@PathVariable String bookingId) {
+    bookingService.deleteBooking(bookingId);
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }

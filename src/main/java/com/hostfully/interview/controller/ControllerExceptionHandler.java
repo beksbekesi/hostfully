@@ -1,5 +1,6 @@
 package com.hostfully.interview.controller;
 
+import com.hostfully.interview.domain.dto.exception.InvalidDataException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,5 +22,11 @@ public class ControllerExceptionHandler {
             ex.getAllErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(" and ")));
+  }
+
+  @ExceptionHandler(InvalidDataException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public ResponseEntity<String> handleNotFoundException(InvalidDataException ex) {
+    return ResponseEntity.notFound().build();
   }
 }
