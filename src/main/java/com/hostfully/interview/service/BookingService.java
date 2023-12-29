@@ -54,7 +54,9 @@ public class BookingService {
     existingBooking.setStartDate(bookingDto.startDate());
     existingBooking.setEndDate(bookingDto.endDate());
 
-    checkAvailability(existingBooking);
+    if (BookingStatus.ACTIVE.equals(bookingDto.bookingStatus())) {
+      checkAvailability(existingBooking);
+    }
 
     List<GuestDetails> newGuestDetails =
         bookingDto.guestDetails().stream()
