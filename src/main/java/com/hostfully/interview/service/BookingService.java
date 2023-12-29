@@ -77,6 +77,7 @@ public class BookingService {
             .orElseThrow(() -> new InvalidDataException("Booking with ID not found: " + id));
 
     existingBooking.setBookingStatus(BookingStatus.DELETED);
+    bookingRepository.save(existingBooking);
   }
 
   private void checkAvailability(Booking booking) {
