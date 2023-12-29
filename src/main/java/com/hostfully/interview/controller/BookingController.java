@@ -34,9 +34,11 @@ public class BookingController {
   }
 
   @PutMapping("/{bookingId}")
-  public ResponseEntity<BookingDto> updateBooking(@RequestBody @Valid BookingDto bookingDto, @PathVariable String bookingId) {
+  public ResponseEntity<BookingDto> updateBooking(
+      @RequestBody @Valid BookingDto bookingDto, @PathVariable String bookingId) {
     validateDates(bookingDto.startDate(), bookingDto.endDate());
-    return ResponseEntity.status(HttpStatus.OK).body(bookingService.updateBooking(bookingDto, bookingId));
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(bookingService.updateBooking(bookingDto, bookingId));
   }
 
   @DeleteMapping("/{bookingId}")

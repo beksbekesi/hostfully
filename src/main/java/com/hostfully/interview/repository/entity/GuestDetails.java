@@ -15,9 +15,11 @@ public class GuestDetails {
   @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
 
-  @NotNull private String name;
+  @NotNull
+  private String name;
 
-  @NotNull private Integer age;
+  @NotNull
+  private Integer age;
 
   @ManyToOne
   @JoinColumn(name = "booking_id")

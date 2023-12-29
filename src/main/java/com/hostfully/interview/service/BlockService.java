@@ -26,10 +26,7 @@ public class BlockService {
     Property property =
         propertyRepository
             .findById(blockDto.propertyId())
-            .orElseThrow(
-                () ->
-                    new InvalidDataException(
-                        "Property with ID not found: " + blockDto.propertyId()));
+            .orElseThrow(() -> new InvalidDataException("Property with ID not found: " + blockDto.propertyId()));
 
     Block entity = blockMapper.toEntity(blockDto, property);
     Block savedBlock = blockRepository.save(entity);
@@ -55,6 +52,7 @@ public class BlockService {
   }
 
   public void deleteBlock(String id) {
+    log.info("Deleting block : {}", id);
     blockRepository
         .findById(id)
         .orElseThrow(() -> new InvalidDataException("Block with ID not found: " + id));

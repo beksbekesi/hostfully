@@ -35,12 +35,8 @@ public class BookingService {
 
   public BookingDto createBooking(BookingDto bookingDto) {
     Property property =
-        propertyRepository
-            .findById(bookingDto.propertyId())
-            .orElseThrow(
-                () ->
-                    new InvalidDataException(
-                        "Property with ID not found: " + bookingDto.propertyId()));
+        propertyRepository.findById(bookingDto.propertyId())
+                .orElseThrow(() -> new InvalidDataException("Property with ID not found: " + bookingDto.propertyId()));
 
     Booking entity = bookingMapper.toEntity(bookingDto, property);
     checkAvailability(entity);
@@ -54,8 +50,10 @@ public class BookingService {
         bookingRepository
             .findById(bookingId)
             .orElseThrow(() -> new InvalidDataException("Booking with ID not found: " + bookingId));
+
     existingBooking.setStartDate(bookingDto.startDate());
     existingBooking.setEndDate(bookingDto.endDate());
+
     checkAvailability(existingBooking);
 
     List<GuestDetails> newGuestDetails =
@@ -65,6 +63,7 @@ public class BookingService {
             .toList();
     existingBooking.getGuestDetails().clear();
     existingBooking.getGuestDetails().addAll(newGuestDetails);
+    existingBooking.setBookingStatus(bookingDto.bookingStatus());
 
     Booking savedUpdatedEntity = bookingRepository.save(existingBooking);
     log.info("Booking updated: {} ", savedUpdatedEntity);
