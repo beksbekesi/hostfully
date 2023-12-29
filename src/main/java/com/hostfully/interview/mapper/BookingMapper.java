@@ -1,7 +1,7 @@
 package com.hostfully.interview.mapper;
 
-import com.hostfully.interview.domain.dto.BookingDto;
-import com.hostfully.interview.domain.dto.GuestDetailsDto;
+import com.hostfully.interview.domain.dto.booking.BookingDto;
+import com.hostfully.interview.domain.dto.booking.GuestDetailsDto;
 import com.hostfully.interview.repository.entity.Booking;
 import com.hostfully.interview.repository.entity.GuestDetails;
 import com.hostfully.interview.repository.entity.Property;

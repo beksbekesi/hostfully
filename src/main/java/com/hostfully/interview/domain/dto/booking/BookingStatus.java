@@ -1,4 +1,4 @@
-package com.hostfully.interview.domain.dto;
+package com.hostfully.interview.domain.dto.booking;
 
 public enum BookingStatus {
   ACTIVE,

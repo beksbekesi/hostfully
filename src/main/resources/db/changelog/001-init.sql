@@ -20,4 +20,13 @@ CREATE TABLE guest_details (
     FOREIGN KEY (booking_id) REFERENCES bookings(id)
 );
 
+CREATE TABLE blocks (
+    id VARCHAR(36) PRIMARY KEY,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    reason VARCHAR(255),
+    property_id VARCHAR(36) NOT NULL,
+    FOREIGN KEY (property_id) REFERENCES properties(id)
+);
+
 INSERT INTO properties (id, name) VALUES ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Example Property');

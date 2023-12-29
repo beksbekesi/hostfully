@@ -1,6 +1,8 @@
 package com.hostfully.interview.controller;
 
-import com.hostfully.interview.domain.dto.BookingDto;
+import static com.hostfully.interview.utils.DateRangeValidator.validateDates;
+
+import com.hostfully.interview.domain.dto.booking.BookingDto;
 import com.hostfully.interview.service.BookingService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -27,12 +29,14 @@ public class BookingController {
 
   @PostMapping
   public ResponseEntity<BookingDto> createBooking(@RequestBody @Valid BookingDto bookingDto) {
+    validateDates(bookingDto.startDate(), bookingDto.endDate());
     return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.createBooking(bookingDto));
   }
 
-  @PutMapping
-  public ResponseEntity<BookingDto> updateBooking(@RequestBody @Valid BookingDto bookingDto) {
-    return ResponseEntity.status(HttpStatus.OK).body(bookingService.updateBooking(bookingDto));
+  @PutMapping("/{bookingId}")
+  public ResponseEntity<BookingDto> updateBooking(@RequestBody @Valid BookingDto bookingDto, @PathVariable String bookingId) {
+    validateDates(bookingDto.startDate(), bookingDto.endDate());
+    return ResponseEntity.status(HttpStatus.OK).body(bookingService.updateBooking(bookingDto, bookingId));
   }
 
   @DeleteMapping("/{bookingId}")

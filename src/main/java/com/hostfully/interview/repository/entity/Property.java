@@ -20,4 +20,7 @@ public class Property {
 
   @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Booking> bookings = new ArrayList<>();
+
+  @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Block> blocks = new ArrayList<>();
 }

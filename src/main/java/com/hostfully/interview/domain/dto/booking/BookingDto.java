@@ -1,4 +1,4 @@
-package com.hostfully.interview.domain.dto;
+package com.hostfully.interview.domain.dto.booking;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

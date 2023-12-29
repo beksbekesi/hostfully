@@ -1,7 +1,8 @@
 package com.hostfully.interview.service;
 
-import com.hostfully.interview.domain.dto.BookingDto;
-import com.hostfully.interview.domain.dto.BookingStatus;
+import com.hostfully.interview.domain.dto.booking.BookingDto;
+import com.hostfully.interview.domain.dto.booking.BookingStatus;
+import com.hostfully.interview.domain.dto.exception.InvalidBookingException;
 import com.hostfully.interview.domain.dto.exception.InvalidDataException;
 import com.hostfully.interview.mapper.BookingMapper;
 import com.hostfully.interview.repository.BookingRepository;
@@ -23,6 +24,7 @@ public class BookingService {
   private final BookingRepository bookingRepository;
   private final PropertyRepository propertyRepository;
   private final BookingMapper bookingMapper;
+  private final BlockService blockService;
 
   public BookingDto getBooking(String id) {
     return bookingRepository
@@ -41,24 +43,21 @@ public class BookingService {
                         "Property with ID not found: " + bookingDto.propertyId()));
 
     Booking entity = bookingMapper.toEntity(bookingDto, property);
+    checkAvailability(entity);
     Booking savedBooking = bookingRepository.save(entity);
     log.info("Booking saved: {} ", savedBooking);
     return bookingMapper.toDto(savedBooking);
   }
 
-  public BookingDto updateBooking(BookingDto bookingDto) {
-    if (Objects.isNull(bookingDto.id())) {
-      throw new RuntimeException("Booking id cannot be null.");
-    }
+  public BookingDto updateBooking(BookingDto bookingDto, String bookingId) {
     Booking existingBooking =
         bookingRepository
-            .findById(bookingDto.id())
-            .orElseThrow(
-                () ->
-                    new InvalidDataException(
-                        "Booking with ID not found: " + bookingDto.propertyId()));
+            .findById(bookingId)
+            .orElseThrow(() -> new InvalidDataException("Booking with ID not found: " + bookingId));
     existingBooking.setStartDate(bookingDto.startDate());
     existingBooking.setEndDate(bookingDto.endDate());
+    checkAvailability(existingBooking);
+
     List<GuestDetails> newGuestDetails =
         bookingDto.guestDetails().stream()
             .map(bookingMapper::toEntity)
@@ -79,5 +78,24 @@ public class BookingService {
             .orElseThrow(() -> new InvalidDataException("Booking with ID not found: " + id));
 
     existingBooking.setBookingStatus(BookingStatus.DELETED);
+  }
+
+  private void checkAvailability(Booking booking) {
+    List<Booking> overlappingBookings =
+        bookingRepository
+            .findBookingsBetweenDatesForProperty(
+                booking.getStartDate(), booking.getEndDate(), booking.getProperty().getId())
+            .stream()
+            .filter(
+                overlappingBooking -> !Objects.equals(overlappingBooking.getId(), booking.getId()))
+            .toList();
+    if (!overlappingBookings.isEmpty()) {
+      throw new InvalidBookingException("Bookings overlapping.");
+    }
+    if (!blockService.checkBlockForDatesAndProperty(
+        booking.getStartDate(), booking.getEndDate(), booking.getProperty().getId())) {
+      throw new InvalidBookingException(
+          "There are blocks for the given date range for this property.");
+    }
   }
 }
